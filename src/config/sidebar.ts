@@ -2,6 +2,7 @@ import {
   LayoutDashboard,
   LucideIcon,
   Package,
+  ReceiptText,
   Truck,
   LogOut,
 } from "lucide-react";
@@ -47,6 +48,20 @@ export const sidebarConfig: SidebarMenuItem[] = [
       {
         title: "Add Vendor",
         url: SITE_ROUTES.DASHBOARD.VENDOR.ADD,
+      },
+    ],
+  },
+  {
+    title: "Sales Invoices",
+    icon: ReceiptText,
+    items: [
+      {
+        title: "Invoices",
+        url: SITE_ROUTES.DASHBOARD.SALES_INVOICES.ROOT,
+      },
+      {
+        title: "Create Invoice",
+        url: SITE_ROUTES.DASHBOARD.SALES_INVOICES.ADD,
       },
     ],
   },

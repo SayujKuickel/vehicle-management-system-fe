@@ -29,6 +29,12 @@ export const SITE_ROUTES = {
       ADD: "/dashboard/vendor/add",
       EDIT: (id: string) => `/dashboard/vendor/${id}/edit`,
     },
+    SALES_INVOICES: {
+      ROOT: "/dashboard/sales-invoices",
+      VIEW: (id: string) => `/dashboard/sales-invoices/${id}`,
+      ADD: "/dashboard/sales-invoices/add",
+      EDIT: (id: string) => `/dashboard/sales-invoices/${id}/edit`,
+    },
   },
 } as const;
 
@@ -57,6 +63,10 @@ export const PRIVATE_ROUTES = [
   SITE_ROUTES.DASHBOARD.VENDOR.ADD,
   SITE_ROUTES.DASHBOARD.VENDOR.VIEW(":id"),
   SITE_ROUTES.DASHBOARD.VENDOR.EDIT(":id"),
+  SITE_ROUTES.DASHBOARD.SALES_INVOICES.ROOT,
+  SITE_ROUTES.DASHBOARD.SALES_INVOICES.ADD,
+  SITE_ROUTES.DASHBOARD.SALES_INVOICES.VIEW(":id"),
+  SITE_ROUTES.DASHBOARD.SALES_INVOICES.EDIT(":id"),
 ] as const;
 
 export function isPublicRoute(pathname: string): boolean {

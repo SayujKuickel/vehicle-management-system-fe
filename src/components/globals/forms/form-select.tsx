@@ -13,7 +13,7 @@ interface Option {
   label: string;
 }
 
-interface FormSelectProps<
+export interface FormSelectProps<
   T extends FieldValues,
 > extends SelectHTMLAttributes<HTMLSelectElement> {
   name: FieldPath<T>;

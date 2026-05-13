@@ -1,11 +1,11 @@
 "use client";
 
+import { FormInput, FormSelect } from "@/components/globals/forms";
 import { Button } from "@/components/ui/button";
 import { registrationSchema, type RegistrationFormData } from "@/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { FormInput } from "@/components/globals/forms";
 
 interface RegistrationFormProps {
   onSubmit?: (data: RegistrationFormData) => Promise<void> | void;
@@ -19,16 +19,23 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
     control,
   } = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
+    defaultValues: {
+      role: "customer",
+      firstName: "",
+      lastName: "",
+      userName: "",
+      email: "",
+      password: "",
+      phone: "",
+      address: "",
+      vehicleNumber: "",
+    },
   });
 
   const onSubmitHandler = async (data: RegistrationFormData) => {
     try {
       setIsLoading(true);
-      if (onSubmit) {
-        await onSubmit(data);
-      }
-    } catch (error) {
-      console.error("Registration error:", error);
+      await onSubmit?.(data);
     } finally {
       setIsLoading(false);
     }
@@ -36,6 +43,17 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-4 w-full">
+      <FormSelect
+        name="role"
+        control={control}
+        label="Account Type"
+        options={[
+          { value: "customer", label: "Customer" },
+          { value: "staff", label: "Staff" },
+        ]}
+        error={errors.role?.message}
+      />
+
       <div className="grid grid-cols-2 gap-4">
         <FormInput
           name="firstName"
@@ -75,7 +93,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
         control={control}
         label="Password"
         type="password"
-        placeholder="••••••••"
+        placeholder="Password"
         error={errors.password?.message}
       />
 
@@ -87,6 +105,24 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
         placeholder="+1 (555) 000-0000"
         description="Optional"
         error={errors.phone?.message}
+      />
+
+      <FormInput
+        name="address"
+        control={control}
+        label="Address"
+        placeholder="Street address"
+        description="Optional"
+        error={errors.address?.message}
+      />
+
+      <FormInput
+        name="vehicleNumber"
+        control={control}
+        label="Vehicle Number"
+        placeholder="ABC-1234"
+        description="Optional"
+        error={errors.vehicleNumber?.message}
       />
 
       <Button type="submit" disabled={isLoading} className="w-full mt-6">

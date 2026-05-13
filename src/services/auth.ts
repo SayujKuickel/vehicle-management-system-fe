@@ -1,81 +1,71 @@
 import { BaseService } from "@/lib/api/service";
+import { removeAuthToken } from "@/lib/auth";
 import { AxiosResponse } from "axios";
 
-interface RegisterPayload {
+export type RegisterRole = "customer" | "staff";
+
+export interface RegisterPayload {
+  firstName: string;
+  lastName: string;
+  userName: string;
   email: string;
   password: string;
-  confirmPassword: string;
-  firstName?: string;
-  lastName?: string;
   phone?: string;
+  address?: string;
+  vehicleNumber?: string;
 }
 
-interface LoginPayload {
+export interface LoginPayload {
   email: string;
   password: string;
 }
 
-interface ForgotPasswordPayload {
-  email: string;
-}
-
-interface ResetPasswordPayload {
+export interface AuthResponse {
+  success: boolean;
+  message: string;
   token: string;
-  newPassword: string;
 }
 
 class AuthService extends BaseService {
-  /**
-   * Login - Public endpoint
-   */
-  async login(credentials: LoginPayload): Promise<AxiosResponse<any>> {
-    return this.post("/auth/login", credentials, { isPrivate: false });
+  async login(
+    credentials: LoginPayload,
+  ): Promise<AxiosResponse<AuthResponse>> {
+    return this.post<AuthResponse>("/api/auth/login", credentials, {
+      isPrivate: false,
+    });
   }
 
-  /**
-   * Register - Public endpoint
-   */
-  async register(userData: RegisterPayload): Promise<AxiosResponse<any>> {
-    return this.post("/auth/register", userData, { isPrivate: false });
+  async registerCustomer(
+    userData: RegisterPayload,
+  ): Promise<AxiosResponse<AuthResponse>> {
+    return this.post<AuthResponse>("/api/auth/register/customer", userData, {
+      isPrivate: false,
+    });
   }
 
-  /**
-   * Forgot Password - Public endpoint
-   */
-  async forgotPassword(
-    payload: ForgotPasswordPayload,
-  ): Promise<AxiosResponse<any>> {
-    return this.post("/auth/forgot-password", payload, { isPrivate: false });
+  async registerStaff(
+    userData: RegisterPayload,
+  ): Promise<AxiosResponse<AuthResponse>> {
+    return this.post<AuthResponse>("/api/auth/register/staff", userData, {
+      isPrivate: false,
+    });
   }
 
-  /**
-   * Reset Password - Public endpoint
-   */
-  async resetPassword(
-    payload: ResetPasswordPayload,
-  ): Promise<AxiosResponse<any>> {
-    return this.post("/auth/reset-password", payload, { isPrivate: false });
+  async register(
+    role: RegisterRole,
+    userData: RegisterPayload,
+  ): Promise<AxiosResponse<AuthResponse>> {
+    return role === "staff"
+      ? this.registerStaff(userData)
+      : this.registerCustomer(userData);
   }
 
-  /**
-   * Logout - Private endpoint (requires authentication)
-   */
-  async logout(): Promise<AxiosResponse<any>> {
-    return this.post("/auth/logout", {}, { isPrivate: true });
+  logout(): void {
+    removeAuthToken();
   }
 
-  /**
-   * Verify Token - Private endpoint (requires authentication)
-   */
-  async verifyToken(): Promise<AxiosResponse<any>> {
-    return this.get("/auth/verify", { isPrivate: true });
-  }
-
-  /**
-   * Refresh Token - Private endpoint (requires authentication)
-   */
-  async refreshToken(): Promise<AxiosResponse<any>> {
-    return this.post("/auth/refresh", {}, { isPrivate: true });
+  supportsPasswordRecovery(): boolean {
+    return false;
   }
 }
 

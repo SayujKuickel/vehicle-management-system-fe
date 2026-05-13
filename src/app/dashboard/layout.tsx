@@ -11,7 +11,7 @@ export default function DashboardLayout({
     <div className="flex h-screen">
       <DashSidebar />
       <main className="flex-1 overflow-y-auto">
-        <div className="container mx-auto py-6">{children}</div>
+        <div className="container mx-auto p-6">{children}</div>
       </main>
     </div>
   );

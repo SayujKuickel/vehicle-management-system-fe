@@ -12,6 +12,7 @@ const AUTH_USER_KEY = "authUser";
 export function saveAuthToken(token: string): void {
   if (typeof window !== "undefined") {
     sessionStorage.setItem(AUTH_TOKEN_KEY, token);
+    document.cookie = `${AUTH_TOKEN_KEY}=${encodeURIComponent(token)}; path=/; SameSite=Lax`;
   }
 }
 
@@ -32,6 +33,7 @@ export function removeAuthToken(): void {
   if (typeof window !== "undefined") {
     sessionStorage.removeItem(AUTH_TOKEN_KEY);
     sessionStorage.removeItem(AUTH_USER_KEY);
+    document.cookie = `${AUTH_TOKEN_KEY}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
   }
 }
 
